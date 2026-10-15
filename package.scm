@@ -8,7 +8,7 @@
   :repository "http://github.com/shirok/Gauche-text-ncurses.git"
 
   ;; Current version number string.
-  :version "0.1"
+  :version "0.0"
 
   ;; Stable version number, if it differs from 'version' above.
   ;; If the current version is being actively developed and not suitable
