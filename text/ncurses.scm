@@ -201,6 +201,59 @@
   (define-c-constant REPORT-MOUSE-POSITION)
   (define-c-constant ALL-MOUSE-EVENTS)
 
+  ;; public variables
+  (define-c-variable curscr <WINDOW*>)
+  (define-c-variable newscr <WINDOW*>)
+  (define-c-variable stdscr <WINDOW*>)
+
+  ;; attroff(3)
+  ;; NB: Functons operates on stdscr are macros, so we can't use
+  ;; define-c-function.
+  (define (attroff attrs) (wattroff stdscr attrs))
+  (define-c-function wattroff `(,<WINDOW*> int) 'int)
+  (define (attron attrs) (wattron stdscr attrs))
+  (define-c-function wattron `(,<WINDOW*> int) 'int)
+  (define (attrset attrs) (wattron stdscr attrs))
+  (define-c-function wattrset `(,<WINDOW*> int) 'int)
+  (define (color-set color-pair opts) (wcolor-set stdscr color-pair opts))
+  (define-c-function wcolor-set `(,<WINDOW*> short void*) 'int)
+  (define (standend) (wstandend stdscr))
+  (define-c-function wstandend `(,<WINDOW*>) 'int)
+  (define (standout) (wstandout stdscr))
+  (define-c-function wstandout `(,<WINDOW*>) 'int)
+  ;; Followigs need attr_t
+  ;; attr-get - maybe return color-pair arg as well
+  ;; wattr-get - ditto
+  ;; attr-off
+  ;; wattr-off
+  ;; attr-on
+  ;; wattr-on
+  ;; attr-set
+  ;; wattr-set
+  ;; chgat
+  ;; wchgat
+  ;; mvchgat
+  ;; mvwcgat
+
+  ;; cbreak(3)
+  (define-c-function cbreak '() 'int)
+  (define-c-function nocbreak '() 'int)
+  (define-c-function echo '() 'int)
+  (define-c-function noecho '() 'int)
+  (define-c-function halfdelay '(int) 'int)
+  (define-c-function intrflush `(,<WINDOW*> bool) 'int)
+  (define-c-function keypad `(,<WINDOW*> bool) 'int)
+  (define-c-function meta `(,<WINDOW*> bool) 'int)
+  (define-c-function nodelay `(,<WINDOW*> bool) 'int)
+  (define-c-function raw '() 'int)
+  (define-c-function noraw '() 'int)
+  (define-c-function qiflush '() 'void)
+  (define-c-function noqiflush '() 'void)
+  (define-c-function timeout '(int) 'void)
+  (define-c-function wtimeout `(,<WINDOW*> int) 'void)
+  (define-c-function notimeout `(,<WINDOW*> bool) 'int)
+  (define-c-function typeahead '(int) 'int)
+
   ;; curs_initscr (3x) - initialization & teardown
   (define-c-function initscr () <WINDOW*>)
   (define-c-function endwin () 'int)
