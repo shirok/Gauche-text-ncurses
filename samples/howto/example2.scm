@@ -8,13 +8,13 @@
 
   (printw "Type any character to see it in bold\n")
   (let1 ch (getch)
-    (cond [(eqv? ch (KEY-F 1))
+    (cond [(eqv? ch (KEY_F 1))
            (printw "F1 Key pressed")]
           [else
            (printw "The pressed key is ")
-           (attron A-BOLD)
+           (attron A_BOLD)
            (printw "%c" ch)
-           (attroff A-BOLD)]))
+           (attroff A_BOLD)]))
   (refresh)
   (getch)
   (endwin)
