@@ -1,0 +1,15 @@
+(use text.ncurses)
+
+(define (main args)
+  (define mesg "Enter a string: ")
+
+  (initscr)
+  (receive (row col) (getmaxyx stdscr)
+    (mvprintw (quotient row 2)
+              (quotient (- col (string-length mesg)) 2)
+              "%s" mesg)
+    (let1 str (getstr)
+      (mvprintw (- LINES 2) 0 "You Entered: %s" str)
+      (getch)))
+  (endwin)
+  0)

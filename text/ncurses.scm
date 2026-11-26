@@ -205,6 +205,13 @@
   (define-c-variable curscr <WINDOW*>)
   (define-c-variable newscr <WINDOW*>)
   (define-c-variable stdscr <WINDOW*>)
+  (define-c-variable ttytype <c-string>)
+  (define-c-variable COLORS <int>)
+  (define-c-variable COLOR_PAIRS <int>)
+  (define-c-variable COLS <int>)
+  (define-c-variable LINES <int>)
+  (define-c-variable ESCDELAY <int>)
+  (define-c-variable TABSIZE <int>)
 
   ;; attroff(3)
   ;; NB: Functons operates on stdscr are macros, so we can't use
@@ -313,6 +320,31 @@
   (define-c-function getmaxy `(,<WINDOW*>) 'int)
   (define-c-function getparx `(,<WINDOW*>) 'int)
   (define-c-function getpary `(,<WINDOW*>) 'int)
+
+  ;; getstr(3)
+  ;; For safety, we always call length-limited version.
+  ;; The procedures return a string on success, #f on error.
+  (define-constant GETSTR_BUFSIZ 1024)
+  (define-c-function %wgetnstr `(,<WINDOW*> char* int) 'int)
+  (define-c-function %mvwgetnstr `(,<WINDOW*> int int char* int) 'int)
+  (define (%call-with-buffer fn len)
+    (let* ([buf (make-native-handle (native-type 'char*) (make-u8vector len))]
+           [r (fn buf len)])
+      (and (eqv? r OK)
+           (c-char*->string/shared buf))))
+
+  (define (getstr) (wgetstr stdscr))
+  (define (getnstr len) (wgetnstr stdscr len))
+  (define (mvgetstr y x) (mvwgetstr stdscr y x))
+  (define (mvgetnstr y x len) (mvwgetnstr stdscr y x len))
+  (define (wgetstr win)
+    (%call-with-buffer (cut %wgetnstr win <> <>) GETSTR_BUFSIZ))
+  (define (wgetnstr win len)
+    (%call-with-buffer (cut %wgetnstr win <> <>) len))
+  (define (mvwgetstr win y x)
+    (%call-with-buffer (cut %mvwgetnstr win y x <> <>) GETSTR_BUFSIZ))
+  (define (mvwgetnstr win y x len)
+    (%call-with-buffer (cut %mvwgetnstr win y x <> <>) len))
 
   ;; getyx(3)
   ;; Instead of set!ting to the x/y var, we return 2 values.
