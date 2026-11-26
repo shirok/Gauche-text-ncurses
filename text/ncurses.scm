@@ -304,6 +304,24 @@
   (define-c-function ungetch '(int) 'int)
   (define-c-function has-key '(int) <c-bool>)
 
+  ;; getbegx(3)
+  (define-c-function getbegx `(,<WINDOW*>) 'int)
+  (define-c-function getbegy `(,<WINDOW*>) 'int)
+  (define-c-function getcurx `(,<WINDOW*>) 'int)
+  (define-c-function getcury `(,<WINDOW*>) 'int)
+  (define-c-function getmaxx `(,<WINDOW*>) 'int)
+  (define-c-function getmaxy `(,<WINDOW*>) 'int)
+  (define-c-function getparx `(,<WINDOW*>) 'int)
+  (define-c-function getpary `(,<WINDOW*>) 'int)
+
+  ;; getyx(3)
+  ;; Instead of set!ting to the x/y var, we return 2 values.
+  ;; Note that Y is the first value, reflecting the name of functions.
+  (define (getyx win) (values (getcury win) (getcurx win)))
+  (define (getbegyx win) (values (getbegy win) (getbegx win)))
+  (define (getmaxyx win) (values (getmaxy win) (getmaxx win)))
+  (define (getparyx win) (values (getpary win) (getparx win)))
+
   ;; printw(3)
   (define-c-function printw `(,<c-string> ...) 'int)
   (define-c-function wprintw `(,<WINDOW*> ,<c-string> ...) 'int)
