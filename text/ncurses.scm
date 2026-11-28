@@ -261,6 +261,16 @@
   (define-c-function notimeout `(,<WINDOW*> bool) 'int)
   (define-c-function typeahead '(int) 'int)
 
+  ;; clear(3)
+  (define (erase) (werase stdscr))
+  (define-c-function werase `(,<WINDOW*>) 'int)
+  (define (clear) (wclear stdscr))
+  (define-c-function wclear `(,<WINDOW*>) 'int)
+  (define (clrtobot) (wclrtobot stdscr))
+  (define-c-function wclrtobot `(,<WINDOW*>) 'int)
+  (define (clrtoeol) (wclrtoeol stdscr))
+  (define-c-function wclrtoeol `(,<WINDOW*>) 'int)
+
   ;; curs_initscr (3x) - initialization & teardown
   (define-c-function initscr () <WINDOW*>)
   (define-c-function endwin () 'int)
@@ -353,6 +363,10 @@
   (define (getbegyx win) (values (getbegy win) (getbegx win)))
   (define (getmaxyx win) (values (getmaxy win) (getmaxx win)))
   (define (getparyx win) (values (getpary win) (getparx win)))
+
+  ;; move(3)
+  (define (move y x) (wmove stdscr y x))
+  (define-c-function wmove `(,<WINDOW*> int int) 'int)
 
   ;; printw(3)
   (define-c-function printw `(,<c-string> ...) 'int)
